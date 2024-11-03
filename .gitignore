@@ -1,0 +1,10 @@
+./htmlcov
+/venv
+*.zip
+*/__pycache__/*
+__pycache__/
+*.png
+*.jpg
+*.rdb
+.idea/
+.env
