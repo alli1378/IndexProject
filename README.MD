@@ -1,4 +1,4 @@
-# Naghdeto
+# IndexProject
 
 IndexProject is a Homework project built using python and elasticserarch. This project is designed to run in a virtual environment, ensuring all dependencies are managed and isolated.
 
