@@ -4,7 +4,8 @@ import torch
 from elasticsearch import Elasticsearch
 import lancedb
 from hazm import Normalizer,Stemmer,Lemmatizer,word_tokenize
-
+import numpy as np
+import pyarrow as pa
 # hazme objects for preprocesing
 stemmer = Stemmer()
 lemmatizer = Lemmatizer()
@@ -25,6 +26,13 @@ model = AutoModel.from_pretrained("HooshvareLab/bert-fa-base-uncased")
 # last data
 data = []
 
+schema = pa.schema(
+    [
+        pa.field("id", pa.string()),
+        pa.field("embedding", pa.list_(pa.float32(), list_size=768)),
+        pa.field("About", pa.string()),
+    ]
+)
 # step one
 def convert_english_to_persian(text):
     '''
@@ -99,7 +107,7 @@ for item_from_es in movies:
     data.append({
         'id':item_from_es['_id'],
         'About':about,
-        'embedding': create_embedding(tokens),
+        'embedding': np.array(create_embedding(tokens)[0]),
         
         })
 
@@ -107,5 +115,5 @@ for item_from_es in movies:
 '''
     createtable and insert data to lance db
 '''
-tbl = db.create_table("About_table",data=data )
+tbl = db.create_table("About_table",schema=schema,data=data )
         
